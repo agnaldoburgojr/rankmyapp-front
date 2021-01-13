@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Container, CharacterList, Card, Avatar, Name } from "./styles";
 
-function App() {
+const App = () => {
+  const [characters, setCharacters] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3334")
+      .then(({ data }) => setCharacters(data))
+      .catch((error) => console.log(error));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <CharacterList>
+        {characters.map((character) => (
+          <Card key={character.id}>
+            <Avatar src={character.image} alt={character.name} />
+            <Name>{character.name}</Name>
+          </Card>
+        ))}
+      </CharacterList>
+    </Container>
   );
-}
+};
 
 export default App;
